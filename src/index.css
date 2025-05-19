@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil:opsz,wght@10..72,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Sigmar&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import "tailwindcss";
+
+body {
+  font-family: Outfit;
+}
+.sidebar{
+  @apply max-md:hidden
+}
+.sidebar img {
+  width: 20px;
+}
+
+.recent-entry {
+  @apply flex items-start gap-2.5 p-2.5 pr-10 rounded-4xl cursor-pointer hover:bg-[#e2e6eb] transition-all duration-300;
+}
+
+.bottom-item {
+  @apply pr-2.5 cursor-pointer;
+}
+
+.card{
+  @apply h-[200px] p-3.5 bg-[#f0f4f9] rounded-xl relative cursor-pointer hover:bg-[#dfe4ea] transition-all duration-300
+} 
+
+.title-span {
+  background: -webkit-linear-gradient(16deg, #4b90ff, #ff5546);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cards {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  padding: 20px;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card img{
+  @apply w-9 p-1 absolute bg-white rounded-2xl bottom-2.5 right-2.5
+}
+
+.card p {
+  @apply text-[#585858] text-xl
+}
+
+.search-box{
+  @apply flex items-center justify-between gap-5 bg-[#f0f4f9] py-2.5 px-5 rounded-[50px] max-md:py-1.5 max-md:px-2.5
+}
+
+.search-box img {
+  @apply w-6 cursor-pointer max-md:w-5
+}
+.search-box div{
+  @apply max-md:gap-1.5
+}
+
+.result{
+  @apply px-0 py-[5%] max-h-[70vh] overflow-y-scroll
+}
+.result::-webkit-scrollbar{
+  display: none;
+}
+
+.loader{
+  @apply w-full flex flex-col gap-2.5;
+  
+  
+}
+
+.loader hr{
+  @apply rounded-sm ;
+  background: linear-gradient(to right , #9ed7ff,#ffffff,#9ed7ff);
+  background-size: 800px 50px;
+  height: 20px;
+  border: none;
+  animation: loader 3s infinite linear;
+}
+
+@keyframes loader{
+  0%{
+    background-position: -800px 0px;
+  }
+  100%{
+    background-position: 800px 0px;
+  }
+}
+
+#root{
+  animation: fadeIn 1.5s;
+}
+
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
