@@ -3,8 +3,13 @@ import { callGemini } from '../config/gemini';
 
 export const Context = createContext();
 
-function parseBold(text) {
-    return text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+// دالة لتحويل Markdown بسيط إلى HTML
+function formatMarkdownToHTML(text) {
+    return text
+        .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')                    // **bold**
+        .replace(/_(.+?)_/g, '<i>$1</i>')                          // _italic_
+        .replace(/~~(.+?)~~/g, '<s>$1</s>')                        // ~~strikethrough~~
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');  // [text](url)
 }
 
 const ContextProvider = (props) => {
@@ -18,7 +23,7 @@ const ContextProvider = (props) => {
     const delayPara = (index, nextWord) => {
         setTimeout(() => {
             setResultData(prev => prev + nextWord);
-        }, 100 * index);
+        }, 50 * index); // أسرع شوية (اختياري)
     };
 
     const newChat = () => {
@@ -38,20 +43,17 @@ const ContextProvider = (props) => {
         try {
             const response = await callGemini(finalInput);
 
-            // Parse **bold**
-            const htmlResponse = parseBold(response);
-
+            const formattedHTML = formatMarkdownToHTML(response);
             setResultData('');
 
-
-            const words = htmlResponse.split(' ');
+            const words = formattedHTML.split(' ');
             for (let i = 0; i < words.length; i++) {
                 delayPara(i, words[i] + ' ');
             }
 
         } catch (error) {
             console.error('Error calling Gemini:', error);
-            setResultData('Error');
+            setResultData('<b style="color:red">حدث خطأ في الاتصال بـ Gemini</b>');
         } finally {
             setLoading(false);
             setInput('');
