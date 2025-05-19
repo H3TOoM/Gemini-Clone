@@ -6,6 +6,11 @@ import { Context } from '../context/context'
 const Main = () => {
 
 
+  // useEffect(() => {
+  //   console.log(apiKey);
+  // }, [])
+
+
   const { onSent,
     recentPrompt,
     showResult,

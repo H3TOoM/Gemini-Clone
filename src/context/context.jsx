@@ -3,8 +3,11 @@ import { callGemini } from '../config/gemini';
 
 export const Context = createContext();
 
-const ContextProvider = (props) => {
+function parseBold(text) {
+    return text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
 
+const ContextProvider = (props) => {
     const [input, setInput] = useState('');
     const [recentPrompt, setRecentPrompt] = useState('');
     const [prevPrompts, setPrevPrompts] = useState([]);
@@ -16,12 +19,13 @@ const ContextProvider = (props) => {
         setTimeout(() => {
             setResultData(prev => prev + nextWord);
         }, 100 * index);
-    }
+    };
 
     const newChat = () => {
-        setLoading(false)
-        setShowResult(false)
-    }
+        setLoading(false);
+        setShowResult(false);
+        setResultData('');
+    };
 
     async function onSent(userInput) {
         setLoading(true);
@@ -31,33 +35,27 @@ const ContextProvider = (props) => {
         setRecentPrompt(finalInput);
         setPrevPrompts(prev => [...prev, finalInput]);
 
-        const response = await callGemini(finalInput);
+        try {
+            const response = await callGemini(finalInput);
 
-        // **bold** parsing
-        let responseArray = response.split('**');
-        let newResponse = "";
+            // Parse **bold**
+            const htmlResponse = parseBold(response);
 
-        for (let i = 0; i < responseArray.length; i++) {
-            if (i % 2 === 0) {
-                newResponse += responseArray[i];
-            } else {
-                newResponse += "<b>" + responseArray[i] + "</b>";
+            setResultData('');
+
+
+            const words = htmlResponse.split(' ');
+            for (let i = 0; i < words.length; i++) {
+                delayPara(i, words[i] + ' ');
             }
+
+        } catch (error) {
+            console.error('Error calling Gemini:', error);
+            setResultData('Error');
+        } finally {
+            setLoading(false);
+            setInput('');
         }
-
-        // single star (*) parsing
-        let newResponse2 = newResponse.split("*").join("</b>");
-
-        setResultData("");
-        const newResponseArray = newResponse2.split(" ");
-
-        for (let i = 0; i < newResponseArray.length; i++) {
-            delayPara(i, newResponseArray[i] + " ");
-        }
-
-        console.log(newResponse2);
-        setLoading(false);
-        setInput('');
     }
 
     const contextValue = {
@@ -72,7 +70,7 @@ const ContextProvider = (props) => {
         showResult,
         resultData,
         loading,
-        newChat
+        newChat,
     };
 
     return (

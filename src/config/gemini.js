@@ -1,30 +1,29 @@
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-
-
-// To run this code you need to install the following dependencies:
-// npm install @google/genai mime
-// npm install -D @types/node
-
 import { GoogleGenAI } from '@google/genai';
+import { useEffect } from 'react';
+
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+
 
 
 export async function callGemini(prompt) {
   const ai = new GoogleGenAI({
-    apiKey: API_KEY,
+    apiKey: apiKey,
   });
 
   const config = {
     responseMimeType: 'text/plain',
   };
 
-const model= 'gemini-2.0-flash-001';
+  const model = 'gemini-2.0-flash-lite';
 
   const contents = [
     {
       role: 'user',
       parts: [
-        { text: prompt },
+        {
+          text: prompt,
+        },
       ],
     },
   ];
@@ -35,7 +34,7 @@ const model= 'gemini-2.0-flash-001';
     contents,
   });
 
-  let result = "";
+  let result = '';
   for await (const chunk of response) {
     result += chunk.text;
   }
